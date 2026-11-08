@@ -9,10 +9,7 @@ st.set_page_config(page_title="Pocket Option Pro Signal", page_icon="🎯", layo
 st.markdown("<h1 style='text-align: center; color: #00CC66;'>🎯 محلل صفقات بوكت أوبشن الاحترافي</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #888;'>برنامج جديد ومستقر لتحليل الشارت واستخراج التوصيات بدقة</p>", unsafe_allow_html=True)
 
-# إدخال مفتاح الـ API
 api_key = st.text_input("🔑 أدخل مفتاح Google Gemini API Key الخاص بك:", type="password")
-
-# رفع صورة الشارت
 uploaded_file = st.file_uploader("📂 اختر صورة الشارت (منصة بوكت أوبشن):", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
@@ -27,13 +24,12 @@ if st.button("🚀 ابدأ تحليل الصفقة الآن", type="primary"):
     else:
         with st.spinner("🔄 جاري إرسال الشارت ومعالجة التحليل الفني..."):
             try:
-                # تحويل الصورة إلى صيغة Base64 للإرسال المباشر
                 buffered = io.BytesIO()
                 image.save(buffered, format="JPEG")
                 img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
                 
-                # استخدام رابط الاتصال المباشر المحدث والمدعوم رسمياً من جوجل
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+                # استخدام النموذج المتوافق تماماً مع الاتصال المباشر للصور
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key={api_key}"
                 
                 headers = {'Content-Type': 'application/json'}
                 
@@ -70,10 +66,10 @@ if st.button("🚀 ابدأ تحليل الصفقة الآن", type="primary"):
                         st.markdown("### 📊 نتيجة التوصية:")
                         st.markdown(ai_text)
                     except Exception as parse_err:
-                        st.error(f"خطأ في قراءة رد الخادم: {parse_err} | الرد الكامل: {result}")
+                        st.error(f"خطأ في قراءة الرد: {parse_err} | الرد: {result}")
                 else:
                     error_message = result.get('error', {}).get('message', 'خطأ غير معروف')
                     st.error(f"❌ خطأ من الخادم (رمز {response.status_code}): {error_message}")
                     
             except Exception as e:
-                st.error(f"حدث خطأ في الاتصال بالشبكة: {e}")
+                st.error(f"حدث خطأ في الاتصال: {e}")
