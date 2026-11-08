@@ -21,15 +21,21 @@ if uploaded_file is not None and api_key:
     if st.button("🚀 تحليل الشارت واستخراج الصفقة"):
         with st.spinner("⏳ جاري قراءة المؤشرات والزخم..."):
             try:
-                # سحب أول نموذج متاح يدعم توليد المحتوى تلقائياً لتفادي أخطاء الأسماء
-                target_model = 'gemini-pro-vision'
-                for m in genai.list_models():
-                    if 'generateContent' in m.supported_generation_methods:
-                        if 'flash' in m.name or 'pro' in m.name:
-                            target_model = m.name
-                            break
+                # حل نهائي ومضمون: فحص النماذج المتاحة في حسابك واختيار أول نموذج يدعم الصور تلقائياً
+                available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
                 
-                model = genai.GenerativeModel(target_model)
+                selected_model_name = None
+                for m_name in available_models:
+                    if 'flash' in m_name or 'pro' in m_name:
+                        selected_model_name = m_name
+                        break
+                
+                if not selected_model_name and available_models:
+                    selected_model_name = available_models[0]
+                elif not selected_model_name:
+                    selected_model_name = 'gemini-1.5-flash'
+                
+                model = genai.GenerativeModel(selected_model_name)
                 
                 prompt = (
                     "أنت محلل محترف لمنصة بوكت أوبشن (Pocket Option). "
