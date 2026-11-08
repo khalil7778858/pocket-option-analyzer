@@ -21,8 +21,8 @@ if uploaded_file is not None and api_key:
     if st.button("🚀 تحليل الشارت واستخراج الصفقة"):
         with st.spinner("⏳ جاري قراءة المؤشرات والزخم..."):
             try:
-                # استخدام النموذج المقترح رسمياً من رسالة الخطأ
-                model = genai.GenerativeModel('gemini-3.8-flash')
+                # استخدام نموذج بديل مدعوم للصور
+                model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 prompt = (
                     "أنت محلل محترف لمنصة بوكت أوبشن (Pocket Option). "
