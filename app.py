@@ -21,7 +21,7 @@ if uploaded_file is not None and api_key:
     if st.button("🚀 تحليل الشارت واستخراج الصفقة"):
         with st.spinner("⏳ جاري قراءة المؤشرات والزخم..."):
             try:
-                # استخدام الطريقة الصحيحة عبر GenerativeModel بدون بادئة models/ الخاطئة
+                # استخدام النموذج الافتراضي المدعوم للوسائط المتعددة
                 model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 prompt = (
