@@ -25,8 +25,8 @@ if uploaded_file is not None and api_key:
     if st.button("🚀 تحليل الشارت واستخراج الصفقة"):
         with st.spinner("⏳ جاري قراءة المؤشرات والزخم..."):
             try:
-                # استخدام النموذج الافتراضي المعتمد للصور والنصوص
-                model = genai.GenerativeModel('gemini-1.5-flash-latest')
+                # استخدام النموذج القياسي المعتمد للصور
+                model = genai.GenerativeModel('gemini-2.5-flash')
                 
                 prompt = (
                     "أنت محلل محترف لمنصة بوكت أوبشن (Pocket Option). "
@@ -44,9 +44,9 @@ if uploaded_file is not None and api_key:
                 st.write(response.text)
                 
             except Exception as e:
-                # محاولة احتياطية ثانية في حال لم ينجح النموذج الأول
                 try:
-                    model = genai.GenerativeModel('gemini-pro-vision')
+                    # محاولة أخيرة عبر النموذج العام
+                    model = genai.GenerativeModel('gemini-flash')
                     response = model.generate_content([prompt, image])
                     st.success("✅ تم التحليل بنجاح!")
                     st.markdown("### 📊 نتيجة التحليل والتوصية:")
