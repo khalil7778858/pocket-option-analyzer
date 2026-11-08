@@ -2,31 +2,27 @@ import streamlit as st
 from PIL import Image
 import google.generativeai as genai
 
-# إعداد الصفحة وتصميمها
 st.set_page_config(page_title="Pocket Option AI Analyzer", page_icon="📈", layout="centered")
 
 st.title("📈 محلل صفقات بوكت أوبشن الذكي")
 st.markdown("قم برفع صورة الشارت الحي، وسيقوم النظام بتحليله فوراً وإعطائك التوصية (شراء/بيع) مع المدة المناسبة.")
 
-# إدخال مفتاح الـ API
 api_key = st.text_input("أدخل مفتاح Google Gemini API Key الخاص بك:", type="password")
 
 if api_key:
     genai.configure(api_key=api_key)
 
-# زر لرفع الصورة
 uploaded_file = st.file_uploader("اختر صورة الشارت (منصة بوكت أوبشن):", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None and api_key:
-    # عرض الصورة على التطبيق
     image = Image.open(uploaded_file)
     st.image(image, caption="الشارت المرفوع حالياً", use_column_width=True)
     
     if st.button("🚀 تحليل الشارت واستخراج الصفقة"):
         with st.spinner("⏳ جاري قراءة المؤشرات والزخم..."):
             try:
-                # استخدام النموذج القياسي المعتمد للصور
-                model = genai.GenerativeModel('gemini-2.5-flash')
+                # استخدام الطريقة الصحيحة عبر GenerativeModel بدون بادئة models/ الخاطئة
+                model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 prompt = (
                     "أنت محلل محترف لمنصة بوكت أوبشن (Pocket Option). "
@@ -44,14 +40,6 @@ if uploaded_file is not None and api_key:
                 st.write(response.text)
                 
             except Exception as e:
-                try:
-                    # محاولة أخيرة عبر النموذج العام
-                    model = genai.GenerativeModel('gemini-flash')
-                    response = model.generate_content([prompt, image])
-                    st.success("✅ تم التحليل بنجاح!")
-                    st.markdown("### 📊 نتيجة التحليل والتوصية:")
-                    st.write(response.text)
-                except Exception as e2:
-                    st.error(f"حدث خطأ أثناء الاتصال بالمعالج: {e2}")
+                st.error(f"حدث خطأ أثناء الاتصال بالمعالج: {e}")
 elif uploaded_file is not None and not api_key:
     st.warning("⚠️ لكي يعمل النظام برمجياً، يرجى إدخال مفتاح الـ API الخاص بك في الأعلى.")
