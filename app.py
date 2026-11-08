@@ -25,8 +25,8 @@ if uploaded_file is not None and api_key:
     if st.button("🚀 تحليل الشارت واستخراج الصفقة"):
         with st.spinner("⏳ جاري قراءة المؤشرات والزخم..."):
             try:
-                # استخدام النموذج المتوافق والمحدث
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                # استخدام النموذج الافتراضي المعتمد للصور والنصوص
+                model = genai.GenerativeModel('gemini-1.5-flash-latest')
                 
                 prompt = (
                     "أنت محلل محترف لمنصة بوكت أوبشن (Pocket Option). "
@@ -44,6 +44,14 @@ if uploaded_file is not None and api_key:
                 st.write(response.text)
                 
             except Exception as e:
-                st.error(f"حدث خطأ أثناء الاتصال بالمعالج: {e}")
+                # محاولة احتياطية ثانية في حال لم ينجح النموذج الأول
+                try:
+                    model = genai.GenerativeModel('gemini-pro-vision')
+                    response = model.generate_content([prompt, image])
+                    st.success("✅ تم التحليل بنجاح!")
+                    st.markdown("### 📊 نتيجة التحليل والتوصية:")
+                    st.write(response.text)
+                except Exception as e2:
+                    st.error(f"حدث خطأ أثناء الاتصال بالمعالج: {e2}")
 elif uploaded_file is not None and not api_key:
     st.warning("⚠️ لكي يعمل النظام برمجياً، يرجى إدخال مفتاح الـ API الخاص بك في الأعلى.")
